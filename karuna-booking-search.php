@@ -3,7 +3,7 @@
  * Plugin Name:       Karuna Booking Search
  * Plugin URI:        https://github.com/ledorofficial/karuna-booking-search
  * Description:        Branded availability search and per-room calendar (replaces the Smoobu widgets). A compact one-month search calendar with live nightly prices, plus a read-only per-room calendar, both pulled from bookings.karunasiargao.com. Use [karuna_booking_search], [karuna_room_calendar], or the "Karuna Booking Search" widget.
- * Version:           1.8.1
+ * Version:           1.9.0
  * Author:            Karuna Siargao
  * License:           GPL-2.0-or-later
  * Text Domain:       karuna-booking-search
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const KBS_VERSION      = '1.8.1';
+const KBS_VERSION      = '1.9.0';
 const KBS_FLATPICKR    = '4.6.13';
 const KBS_DEFAULT_BASE = 'https://bookings.karunasiargao.com/';
 const KBS_CALENDAR_API = 'https://bookings.karunasiargao.com/api/calendar';
@@ -50,6 +50,7 @@ function kbs_render_widget($atts = []): string
         'prices'     => 'on',       // "off" hides the per-night prices in the calendar
         'layout'     => 'stacked',  // "stacked" (teal card) or "inline" (light horizontal row)
         'button'     => 'Search',   // submit button label
+        'room'       => '',         // Smoobu room id: that room's prices + capacity, lands on that room
     ], $atts, 'karuna_booking_search');
 
     $base       = esc_url($atts['base']);
@@ -58,17 +59,20 @@ function kbs_render_widget($atts = []): string
     $prices     = strtolower((string) $atts['prices']) === 'off' ? 'off' : 'on';
     $layout     = strtolower((string) $atts['layout']) === 'inline' ? 'inline' : 'stacked';
     $button     = trim((string) $atts['button']) !== '' ? trim((string) $atts['button']) : 'Search';
+    $room       = max(0, (int) $atts['room']);
     $uid        = 'kbs-' . wp_generate_password(6, false, false);
+    $action     = $room ? trailingslashit($base) . '#room-' . $room : $base;
+    $api        = trailingslashit($base) . 'api/calendar' . ($room ? '?room=' . $room : '');
 
     kbs_enqueue_assets();
 
     ob_start();
     ?>
     <form class="kbs-widget kbs-widget--<?php echo esc_attr($layout); ?>" id="<?php echo esc_attr($uid); ?>"
-          action="<?php echo $base; ?>" method="get"
+          action="<?php echo esc_url($action); ?>" method="get"
           target="<?php echo esc_attr($target); ?>"
-          data-kbs data-kbs-prices="<?php echo esc_attr($prices); ?>"
-          data-kbs-api="<?php echo esc_url(trailingslashit($base) . 'api/calendar'); ?>">
+          data-kbs data-kbs-prices="<?php echo esc_attr($prices); ?>"<?php echo $room ? ' data-kbs-room="' . (int) $room . '"' : ''; ?>
+          data-kbs-api="<?php echo esc_url($api); ?>">
         <div class="kbs-field kbs-field--date">
             <label for="<?php echo esc_attr($uid); ?>-in">Arrival</label>
             <input type="text" id="<?php echo esc_attr($uid); ?>-in"

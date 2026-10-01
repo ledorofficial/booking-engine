@@ -64,6 +64,7 @@ engine. The paste-in HTML snippet takes the same change via its `action` and
 | `prices`     | `on`                                 | `off` hides the per-night prices.                  |
 | `layout`     | `stacked`                            | `stacked` = teal card; `inline` = light wide row.  |
 | `button`     | `Search`                             | Submit button label.                              |
+| `room`       | _(none)_                             | Smoobu room id, for a room's own page: the calendar shows that room's prices, guests cap at its capacity, and the search lands on that room. |
 
 ```
 [karuna_booking_search max_guests="4"]                       Skygazer (sleeps 4)

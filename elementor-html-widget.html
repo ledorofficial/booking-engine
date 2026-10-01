@@ -285,6 +285,13 @@
     document.addEventListener('click', function (e) {
       if (box.open && !box.contains(e.target)) box.open = false;
     });
+    // The room's own capacity, once the calendar API reports it.
+    form.kbsSetMax = function (n) {
+      max = n;
+      while (vals.adults + vals.children > max && vals.children > 0) vals.children--;
+      while (vals.adults + vals.children > max && vals.adults > 1) vals.adults--;
+      render();
+    };
     render();
   }
 
@@ -348,6 +355,7 @@
       var keys       = Object.keys(priceDays).sort();
       var lastPriced = keys.length ? keys[keys.length - 1] : null;
       var havePrices = showPrices && !!lastPriced;
+      if (cal.maxGuests > 0 && form.kbsSetMax) form.kbsSetMax(cal.maxGuests);
       var sym = priceCur === 'PHP' ? '₱' : priceCur + ' ';
       function fmtPrice(n){ return n >= 1000 ? sym + (Math.round(n / 100) / 10) + 'K' : sym + Math.round(n); }
 
@@ -401,7 +409,7 @@
             fp.calendarContainer.classList.add('has-prices');
             var note = document.createElement('div');
             note.className = 'kbs-fp-note';
-            note.textContent = 'Nightly prices in ' + priceCur + ' · lowest available room';
+            note.textContent = 'Nightly prices in ' + priceCur + (form.hasAttribute('data-kbs-room') ? ' · this room' : ' · lowest available room');
             fp.calendarContainer.appendChild(note);
           }
         },
