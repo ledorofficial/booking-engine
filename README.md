@@ -117,6 +117,28 @@ English, 简体中文, 繁體中文, 日本語, 한국어, Русский.
 - Filters: `kbs_engine_lang` (override the detected language), `kbs_booking_hosts`
   (extra hosts whose links get `?lang=`; any `bookings.*` host is already covered).
 
+### Making the rest of a Polylang site follow the language (v1.11)
+
+Free Polylang translates posts and pages but not menus' targets, Elementor
+header/footer templates' text, or hard-coded links. When Polylang is active and
+the visitor is on a non-default language, the plugin also:
+
+- points **menu items** at the translated pages (and uses their titles);
+- rewrites **internal links** in the page (buttons, header, footer) to the
+  translated page, resolved by slug — links with `hreflang` (the switcher) and
+  external links are left alone;
+- swaps **dictionary text**: option `kbs_i18n_dictionary` =
+  `{ "ja": { "Book Now": "今すぐ予約", … }, "zh-CN": { … } }` (engine language
+  code → English text node → translation). Use it for text that lives outside
+  Polylang's reach: shared header/footer labels, a Formidable form's labels, a
+  chat widget. Filter: `kbs_i18n_dictionary`.
+
+Free Polylang cannot share a slug between languages, so give translations a
+language suffix (`faq` → `faq-ja`). The theme's header/footer builder only
+renders a template whose language matches the page — after enabling Polylang,
+assign English to the existing header/footer templates and create translated
+copies, or the site loses its header and footer.
+
 ## Backend dependency
 
 The search widget's price calendar reads `GET /api/calendar` on the booking
