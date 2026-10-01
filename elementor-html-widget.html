@@ -10,6 +10,11 @@
     target="_blank"        open results in a new tab
     data-kbs-prices="off"  hide the per-night prices in the calendar
 
+  ANOTHER PROPERTY (e.g. the El Nido glamping site): change BOTH the form's
+    action="..."  and  data-kbs-api="..."  to that property's booking site, e.g.
+    action="https://bookings.glampingatkarunaelnido.com/"
+    data-kbs-api="https://bookings.glampingatkarunaelnido.com/api/calendar"
+
   HOMEPAGE ROW: for the wide horizontal version on a light background, change
     class="kbs-widget"  ->  class="kbs-widget kbs-widget--inline"
   on the <form> below (and change the button text if you like).
@@ -18,7 +23,8 @@
   https://bookings.karunasiargao.com/api/calendar. If either is blocked the
   widget falls back to plain native date fields, so it always works.
 -->
-<form class="kbs-widget" action="https://bookings.karunasiargao.com/" method="get" data-kbs>
+<form class="kbs-widget" action="https://bookings.karunasiargao.com/" method="get" data-kbs
+      data-kbs-api="https://bookings.karunasiargao.com/api/calendar">
   <div class="kbs-field kbs-field--date">
     <label for="kbs-checkin">Arrival</label>
     <input type="text" id="kbs-checkin" placeholder="Add date" autocomplete="off" readonly data-kbs-checkin>
@@ -293,6 +299,8 @@
     var arrival    = form.querySelector('[data-kbs-arrival]');
     var departure  = form.querySelector('[data-kbs-departure]');
     var showPrices = form.getAttribute('data-kbs-prices') !== 'off';
+    // Each widget reads prices from the booking site it submits to (data-kbs-api).
+    var api = form.getAttribute('data-kbs-api') || API;
 
     form.addEventListener('submit', function (e) {
       // Need both dates, and at least one night (check-out after check-in).
@@ -327,7 +335,7 @@
       .then(function () { return loadScript(CDN + '/plugins/rangePlugin.min.js'); })
       .then(function () {
         if (!showPrices) return {};
-        return fetch(API).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
+        return fetch(api).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
       })
       .then(function (cal) { initPicker(cal || {}); })
       .catch(fallback);

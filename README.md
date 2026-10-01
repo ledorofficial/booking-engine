@@ -37,11 +37,28 @@ and push to `main`. A GitHub Actions workflow
 Uses [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker)
 (bundled in `plugin-update-checker/`). Works token-free while this repo is public.
 
+## Using it on another property's website
+
+One install of the booking engine serves several brands, each on its own
+domain. To use this plugin on, say, the El Nido glamping WordPress site, install
+it there and point `base` at that property's booking domain:
+
+```
+[karuna_booking_search base="https://bookings.glampingatkarunaelnido.com/"]
+[karuna_room_calendar  base="https://bookings.glampingatkarunaelnido.com/" room_id="123"]
+```
+
+The booking site only returns that property's own rooms, prices and availability,
+and only allows requests from its own WordPress domain (CORS) — so the WordPress
+site's address must be listed in that property's CORS origins on the booking
+engine. The paste-in HTML snippet takes the same change via its `action` and
+`data-kbs-api` attributes.
+
 ## Shortcode attributes
 
 | Attribute    | Default                              | Notes                                             |
 |--------------|--------------------------------------|---------------------------------------------------|
-| `base`       | `https://bookings.karunasiargao.com/`| Where the search submits.                          |
+| `base`       | `https://bookings.karunasiargao.com/`| The booking site: where the search submits **and** where prices / sold-out nights are read from (`<base>api/calendar`). |
 | `target`     | `_self`                              | `_blank` opens results in a new tab.               |
 | `max_guests` | `16`                                 | Ceiling for Adults + Children in the Guests picker.|
 | `prices`     | `on`                                 | `off` hides the per-night prices.                  |

@@ -66,6 +66,8 @@
     var arrival    = form.querySelector('[data-kbs-arrival]');
     var departure  = form.querySelector('[data-kbs-departure]');
     var showPrices = form.getAttribute('data-kbs-prices') !== 'off';
+    // Each widget reads prices from the booking site it submits to (set from `base`).
+    var api = form.getAttribute('data-kbs-api') || API;
 
     form.addEventListener('submit', function (e) {
       // Need both dates, and at least one night (check-out after check-in).
@@ -98,8 +100,8 @@
 
     if (!window.flatpickr || !window.rangePlugin) { fallback(); return; }
 
-    if (showPrices && API) {
-      fetch(API).then(function (r) { return r.ok ? r.json() : {}; })
+    if (showPrices && api) {
+      fetch(api).then(function (r) { return r.ok ? r.json() : {}; })
         .catch(function () { return {}; })
         .then(function (cal) { initPicker(cal || {}); });
     } else {

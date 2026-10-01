@@ -3,7 +3,7 @@
  * Plugin Name:       Karuna Booking Search
  * Plugin URI:        https://github.com/ledorofficial/karuna-booking-search
  * Description:        Branded availability search and per-room calendar (replaces the Smoobu widgets). A compact one-month search calendar with live nightly prices, plus a read-only per-room calendar, both pulled from bookings.karunasiargao.com. Use [karuna_booking_search], [karuna_room_calendar], or the "Karuna Booking Search" widget.
- * Version:           1.7.0
+ * Version:           1.8.1
  * Author:            Karuna Siargao
  * License:           GPL-2.0-or-later
  * Text Domain:       karuna-booking-search
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const KBS_VERSION      = '1.7.0';
+const KBS_VERSION      = '1.8.1';
 const KBS_FLATPICKR    = '4.6.13';
 const KBS_DEFAULT_BASE = 'https://bookings.karunasiargao.com/';
 const KBS_CALENDAR_API = 'https://bookings.karunasiargao.com/api/calendar';
@@ -44,7 +44,7 @@ if (is_readable(__DIR__ . '/plugin-update-checker/plugin-update-checker.php')) {
 function kbs_render_widget($atts = []): string
 {
     $atts = shortcode_atts([
-        'base'       => KBS_DEFAULT_BASE,
+        'base'       => KBS_DEFAULT_BASE, // booking site; prices/availability are read from its /api/calendar
         'target'     => '_self',
         'max_guests' => 16,
         'prices'     => 'on',       // "off" hides the per-night prices in the calendar
@@ -67,7 +67,8 @@ function kbs_render_widget($atts = []): string
     <form class="kbs-widget kbs-widget--<?php echo esc_attr($layout); ?>" id="<?php echo esc_attr($uid); ?>"
           action="<?php echo $base; ?>" method="get"
           target="<?php echo esc_attr($target); ?>"
-          data-kbs data-kbs-prices="<?php echo esc_attr($prices); ?>">
+          data-kbs data-kbs-prices="<?php echo esc_attr($prices); ?>"
+          data-kbs-api="<?php echo esc_url(trailingslashit($base) . 'api/calendar'); ?>">
         <div class="kbs-field kbs-field--date">
             <label for="<?php echo esc_attr($uid); ?>-in">Arrival</label>
             <input type="text" id="<?php echo esc_attr($uid); ?>-in"
