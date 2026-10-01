@@ -97,6 +97,26 @@ Find a room's Smoobu apartment ID in the Smoobu dashboard, or in this plugin's
 existing search results (the booking engine's admin/rooms list uses the same
 IDs).
 
+## Languages (Polylang)
+
+The plugin follows the site's current language — Polylang (recommended), WPML or
+TranslatePress — for the same six languages the booking engine speaks:
+English, 简体中文, 繁體中文, 日本語, 한국어, Русский.
+
+- **Handoff:** the search form sends `lang=xx`, and every link on the page to the
+  booking engine (Book Now buttons, menus, room links) gets `?lang=xx` added, so a
+  guest reading the Japanese site lands on the Japanese booking page.
+- **Widget text** (Arrival, Guests, calendar months/weekdays, the default button
+  labels "Search" / "Check availability") is translated. Any other custom button
+  label is shown exactly as written — translate it in the page itself.
+- **Switcher:** `[karuna_language_switcher]` renders the round-flag dropdown,
+  linking each language to the translation of the page being viewed.
+  Attributes: `align="right|left"`, `theme="dark|light"` (dark for a teal header),
+  `code="on|off"` (show e.g. JA beside the flag).
+- Polylang language locales to use: `en_US`, `zh_CN`, `zh_TW`, `ja`, `ko_KR`, `ru_RU`.
+- Filters: `kbs_engine_lang` (override the detected language), `kbs_booking_hosts`
+  (extra hosts whose links get `?lang=`; any `bookings.*` host is already covered).
+
 ## Backend dependency
 
 The search widget's price calendar reads `GET /api/calendar` on the booking

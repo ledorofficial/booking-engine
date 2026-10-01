@@ -1,5 +1,13 @@
 (function () {
   var API = '__KBS_API__';
+  var I18N = window.KBS_I18N || {};
+  var LANG = I18N.lang || 'en';
+  var GUESTS = I18N.guest_forms || ['%d guest', '%d guests', '%d guests'];
+  function guestLabel(n){
+    var i = n === 1 ? 0 : 2;
+    if (LANG === 'ru') { var m10 = n % 10, m100 = n % 100; i = (m10 === 1 && m100 !== 11) ? 0 : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) ? 1 : 2; }
+    return GUESTS[i].replace('%d', n);
+  }
 
   function pad(n){ return String(n).padStart(2, '0'); }
   function iso(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -29,7 +37,7 @@
       valEl.adults.textContent = vals.adults;
       valEl.children.textContent = vals.children;
       hidden.value = total;
-      if (labelEl) labelEl.textContent = total + (total === 1 ? ' guest' : ' guests');
+      if (labelEl) labelEl.textContent = guestLabel(total);
       box.querySelectorAll('[data-kbs-step]').forEach(function (btn) {
         var t = btn.getAttribute('data-kbs-target');
         var down = parseInt(btn.getAttribute('data-kbs-step'), 10) < 0;
@@ -155,6 +163,7 @@
         showMonths: 1,
         minDate: 'today',
         dateFormat: 'D, M j',
+        locale: (window.flatpickr.l10ns && window.flatpickr.l10ns[{ 'zh-CN': 'zh', 'zh-TW': 'zh_tw' }[LANG] || LANG]) || 'default',
         defaultDate: pre.length === 2 ? pre : null,
         plugins: [ new window.rangePlugin({ input: checkout }) ],
         disable: [ blockUnavailable ],
@@ -175,7 +184,7 @@
             fp.calendarContainer.classList.add('has-prices');
             var note = document.createElement('div');
             note.className = 'kbs-fp-note';
-            note.textContent = 'Nightly prices in ' + priceCur + (form.hasAttribute('data-kbs-for-room') ? ' · this room' : ' · lowest available room');
+            note.textContent = (form.hasAttribute('data-kbs-for-room') ? (I18N.note_room || 'Nightly prices in %s · this room') : (I18N.note_lowest || 'Nightly prices in %s · lowest available room')).replace('%s', priceCur);
             fp.calendarContainer.appendChild(note);
           }
         },

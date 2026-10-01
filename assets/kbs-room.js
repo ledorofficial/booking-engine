@@ -1,7 +1,18 @@
 (function () {
   var DEFAULT_BASE = '__KBS_API__';
+  var I18N = window.KBS_I18N || {};
+  var LANG = I18N.lang || 'en';
   var MONTH_NAMES = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
   var WEEKDAYS = ['MO','TU','WE','TH','FR','SA','SU'];
+  if (LANG !== 'en') {
+    // Month and weekday names from the browser's own locale data.
+    try {
+      var mf = new Intl.DateTimeFormat(LANG, { month: 'long' }), wf = new Intl.DateTimeFormat(LANG, { weekday: 'short' });
+      MONTH_NAMES = []; WEEKDAYS = [];
+      for (var i = 0; i < 12; i++) MONTH_NAMES.push(mf.format(new Date(2024, i, 1)).toUpperCase());
+      for (var j = 1; j <= 7; j++) WEEKDAYS.push(wf.format(new Date(2024, 0, j)).toUpperCase()); // 2024-01-01 is a Monday
+    } catch (e) { /* keep English */ }
+  }
 
   function pad(n){ return String(n).padStart(2, '0'); }
   function iso(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -21,7 +32,7 @@
     if (showPrev) {
       var prevBtn = document.createElement('button');
       prevBtn.type = 'button'; prevBtn.className = 'kbs-room-cal-nav prev';
-      prevBtn.setAttribute('aria-label', 'Earlier months');
+      prevBtn.setAttribute('aria-label', I18N.earlier || 'Earlier months');
       prevBtn.innerHTML = '&lsaquo;';
       prevBtn.addEventListener('click', onPrev);
       head.appendChild(prevBtn);
@@ -29,7 +40,7 @@
     if (showNext) {
       var nextBtn = document.createElement('button');
       nextBtn.type = 'button'; nextBtn.className = 'kbs-room-cal-nav next';
-      nextBtn.setAttribute('aria-label', 'Later months');
+      nextBtn.setAttribute('aria-label', I18N.later || 'Later months');
       nextBtn.innerHTML = '&rsaquo;';
       nextBtn.addEventListener('click', onNext);
       head.appendChild(nextBtn);

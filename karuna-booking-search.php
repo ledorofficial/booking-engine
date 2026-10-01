@@ -3,7 +3,7 @@
  * Plugin Name:       Karuna Booking Search
  * Plugin URI:        https://github.com/ledorofficial/karuna-booking-search
  * Description:        Branded availability search and per-room calendar (replaces the Smoobu widgets). A compact one-month search calendar with live nightly prices, plus a read-only per-room calendar, both pulled from bookings.karunasiargao.com. Use [karuna_booking_search], [karuna_room_calendar], or the "Karuna Booking Search" widget.
- * Version:           1.9.1
+ * Version:           1.10.0
  * Author:            Karuna Siargao
  * License:           GPL-2.0-or-later
  * Text Domain:       karuna-booking-search
@@ -14,11 +14,14 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const KBS_VERSION      = '1.9.1';
+const KBS_VERSION      = '1.10.0';
 const KBS_FLATPICKR    = '4.6.13';
 const KBS_DEFAULT_BASE = 'https://bookings.karunasiargao.com/';
 const KBS_CALENDAR_API = 'https://bookings.karunasiargao.com/api/calendar';
 const KBS_REPO         = 'https://github.com/ledorofficial/karuna-booking-search/';
+const KBS_FILE         = __FILE__;
+
+require_once __DIR__ . '/includes/lang.php';
 
 /**
  * One-click updates straight from the public GitHub repo: bump the Version
@@ -58,7 +61,7 @@ function kbs_render_widget($atts = []): string
     $max_guests = max(1, (int) $atts['max_guests']);
     $prices     = strtolower((string) $atts['prices']) === 'off' ? 'off' : 'on';
     $layout     = strtolower((string) $atts['layout']) === 'inline' ? 'inline' : 'stacked';
-    $button     = trim((string) $atts['button']) !== '' ? trim((string) $atts['button']) : 'Search';
+    $button     = kbs_button_label(trim((string) $atts['button']) !== '' ? trim((string) $atts['button']) : 'Search');
     $room       = max(0, (int) $atts['room']);
     $uid        = 'kbs-' . wp_generate_password(6, false, false);
     $action     = $room ? trailingslashit($base) . '#room-' . $room : $base;
@@ -74,30 +77,30 @@ function kbs_render_widget($atts = []): string
           data-kbs data-kbs-prices="<?php echo esc_attr($prices); ?>"<?php echo $room ? ' data-kbs-for-room="' . (int) $room . '"' : ''; ?>
           data-kbs-api="<?php echo esc_url($api); ?>">
         <div class="kbs-field kbs-field--date">
-            <label for="<?php echo esc_attr($uid); ?>-in">Arrival</label>
+            <label for="<?php echo esc_attr($uid); ?>-in"><?php echo esc_html(kbs_t('arrival')); ?></label>
             <input type="text" id="<?php echo esc_attr($uid); ?>-in"
-                   placeholder="Add date" autocomplete="off" readonly data-kbs-checkin>
+                   placeholder="<?php echo esc_attr(kbs_t('add_date')); ?>" autocomplete="off" readonly data-kbs-checkin>
         </div>
         <div class="kbs-field kbs-field--date">
-            <label for="<?php echo esc_attr($uid); ?>-out">Departure</label>
+            <label for="<?php echo esc_attr($uid); ?>-out"><?php echo esc_html(kbs_t('departure')); ?></label>
             <input type="text" id="<?php echo esc_attr($uid); ?>-out"
-                   placeholder="Add date" autocomplete="off" readonly data-kbs-checkout>
+                   placeholder="<?php echo esc_attr(kbs_t('add_date')); ?>" autocomplete="off" readonly data-kbs-checkout>
         </div>
         <div class="kbs-field kbs-field--guests">
-            <label>Guests</label>
+            <label><?php echo esc_html(kbs_t('guests')); ?></label>
             <details class="kbs-guests">
                 <summary>
-                    <span data-kbs-guests-label>2 guests</span>
+                    <span data-kbs-guests-label><?php echo esc_html(kbs_guest_label(2)); ?></span>
                     <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
                 </summary>
                 <div class="kbs-guests-pop">
-                    <?php foreach ([['adults', 'Adults', 2], ['children', 'Children', 0]] as [$k, $lbl, $start]) : ?>
+                    <?php foreach ([['adults', kbs_t('adults'), 2], ['children', kbs_t('children'), 0]] as [$k, $lbl, $start]) : ?>
                         <div class="kbs-guests-row">
                             <span><?php echo esc_html($lbl); ?></span>
                             <span class="kbs-stepper">
-                                <button type="button" data-kbs-step="-1" data-kbs-target="<?php echo esc_attr($k); ?>" aria-label="Fewer <?php echo esc_attr($lbl); ?>">&minus;</button>
+                                <button type="button" data-kbs-step="-1" data-kbs-target="<?php echo esc_attr($k); ?>" aria-label="<?php echo esc_attr(kbs_t('fewer') . ' ' . $lbl); ?>">&minus;</button>
                                 <span data-kbs-val="<?php echo esc_attr($k); ?>"><?php echo (int) $start; ?></span>
-                                <button type="button" data-kbs-step="1" data-kbs-target="<?php echo esc_attr($k); ?>" aria-label="More <?php echo esc_attr($lbl); ?>">+</button>
+                                <button type="button" data-kbs-step="1" data-kbs-target="<?php echo esc_attr($k); ?>" aria-label="<?php echo esc_attr(kbs_t('more') . ' ' . $lbl); ?>">+</button>
                             </span>
                         </div>
                     <?php endforeach; ?>
@@ -110,6 +113,7 @@ function kbs_render_widget($atts = []): string
         </div>
         <input type="hidden" name="arrival" data-kbs-arrival>
         <input type="hidden" name="departure" data-kbs-departure>
+        <input type="hidden" name="lang" value="<?php echo esc_attr(kbs_lang()); ?>">
     </form>
     <?php
     return (string) ob_get_clean();
@@ -136,8 +140,15 @@ function kbs_enqueue_assets(): void
     wp_enqueue_style('kbs-widget');
     wp_add_inline_style('kbs-widget', kbs_asset('kbs.css'));
 
-    wp_register_script('kbs-widget', false, ['flatpickr', 'flatpickr-range'], KBS_VERSION, true);
+    $deps = ['flatpickr', 'flatpickr-range'];
+    if ($loc = kbs_flatpickr_locale(kbs_lang())) {
+        wp_enqueue_script('flatpickr-l10n', $cdn . '/l10n/' . $loc . '.js', ['flatpickr'], KBS_FLATPICKR, true);
+        $deps[] = 'flatpickr-l10n';
+    }
+
+    wp_register_script('kbs-widget', false, $deps, KBS_VERSION, true);
     wp_enqueue_script('kbs-widget');
+    wp_add_inline_script('kbs-widget', 'window.KBS_I18N=' . wp_json_encode(kbs_js_strings()) . ';', 'before');
     wp_add_inline_script('kbs-widget', str_replace(
         '__KBS_API__',
         esc_url_raw(KBS_CALENDAR_API),
@@ -196,6 +207,7 @@ function kbs_enqueue_room_calendar_assets(): void
 
     wp_register_script('kbs-room-calendar', false, [], KBS_VERSION, true);
     wp_enqueue_script('kbs-room-calendar');
+    wp_add_inline_script('kbs-room-calendar', 'window.KBS_I18N=' . wp_json_encode(kbs_js_strings()) . ';', 'before');
     wp_add_inline_script('kbs-room-calendar', str_replace(
         '__KBS_API__',
         esc_url_raw(KBS_DEFAULT_BASE),
