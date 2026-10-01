@@ -3,7 +3,7 @@
  * Plugin Name:       Karuna Booking Search
  * Plugin URI:        https://github.com/ledorofficial/karuna-booking-search
  * Description:        Branded availability search and per-room calendar (replaces the Smoobu widgets). A compact one-month search calendar with live nightly prices, plus a read-only per-room calendar, both pulled from bookings.karunasiargao.com. Use [karuna_booking_search], [karuna_room_calendar], or the "Karuna Booking Search" widget.
- * Version:           1.9.0
+ * Version:           1.9.1
  * Author:            Karuna Siargao
  * License:           GPL-2.0-or-later
  * Text Domain:       karuna-booking-search
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const KBS_VERSION      = '1.9.0';
+const KBS_VERSION      = '1.9.1';
 const KBS_FLATPICKR    = '4.6.13';
 const KBS_DEFAULT_BASE = 'https://bookings.karunasiargao.com/';
 const KBS_CALENDAR_API = 'https://bookings.karunasiargao.com/api/calendar';
@@ -71,7 +71,7 @@ function kbs_render_widget($atts = []): string
     <form class="kbs-widget kbs-widget--<?php echo esc_attr($layout); ?>" id="<?php echo esc_attr($uid); ?>"
           action="<?php echo esc_url($action); ?>" method="get"
           target="<?php echo esc_attr($target); ?>"
-          data-kbs data-kbs-prices="<?php echo esc_attr($prices); ?>"<?php echo $room ? ' data-kbs-room="' . (int) $room . '"' : ''; ?>
+          data-kbs data-kbs-prices="<?php echo esc_attr($prices); ?>"<?php echo $room ? ' data-kbs-for-room="' . (int) $room . '"' : ''; ?>
           data-kbs-api="<?php echo esc_url($api); ?>">
         <div class="kbs-field kbs-field--date">
             <label for="<?php echo esc_attr($uid); ?>-in">Arrival</label>

@@ -175,7 +175,7 @@
             fp.calendarContainer.classList.add('has-prices');
             var note = document.createElement('div');
             note.className = 'kbs-fp-note';
-            note.textContent = 'Nightly prices in ' + priceCur + (form.hasAttribute('data-kbs-room') ? ' · this room' : ' · lowest available room');
+            note.textContent = 'Nightly prices in ' + priceCur + (form.hasAttribute('data-kbs-for-room') ? ' · this room' : ' · lowest available room');
             fp.calendarContainer.appendChild(note);
           }
         },
