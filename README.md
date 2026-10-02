@@ -133,8 +133,11 @@ the visitor is on a non-default language, the plugin also:
   Polylang's reach: shared header/footer labels, a Formidable form's labels, a
   chat widget. Filter: `kbs_i18n_dictionary`.
 
-Free Polylang cannot share a slug between languages, so give translations a
-language suffix (`faq` → `faq-ja`). The theme's header/footer builder only
+Free Polylang cannot share a slug between languages, so translations are stored
+with a language suffix (`faq` → `faq-ja`) — but since v1.12 (`includes/clean-slugs.php`)
+visitors never see it: translated permalinks are the default-language path under the
+language prefix (`/ja/faq/`), clean URLs resolve to the translation, and the old
+suffixed URL 301-redirects. Create translations with the suffixed slug. The theme's header/footer builder only
 renders a template whose language matches the page — after enabling Polylang,
 assign English to the existing header/footer templates and create translated
 copies, or the site loses its header and footer.
