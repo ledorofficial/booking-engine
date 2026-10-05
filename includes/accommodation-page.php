@@ -7,14 +7,30 @@
  * Stays, translated per language) owns that URL, while single rooms keep their
  * /accommodation/<room>/ addresses. The old page URL (/our-unique-stays/, also
  * /ja/our-unique-stays/ and the old suffixed /ja/our-unique-stays-ja/) 301s to it.
+ *
+ * Only on sites that actually have that page: without one, the MotoPress archive and
+ * /our-unique-stays/ are left exactly as they are.
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
+/** True when a published page with the slug `accommodation` exists. */
+function kbs_has_accommodation_page(): bool
+{
+    static $has = null;
+    if ($has === null) {
+        global $wpdb;
+        $has = (bool) $wpdb->get_var(
+            "SELECT ID FROM {$wpdb->posts} WHERE post_name = 'accommodation' AND post_type = 'page' AND post_status = 'publish' LIMIT 1"
+        );
+    }
+    return $has;
+}
+
 add_filter('register_post_type_args', function ($args, $post_type) {
-    if ($post_type === 'mphb_room_type') {
+    if ($post_type === 'mphb_room_type' && kbs_has_accommodation_page()) {
         $args['has_archive'] = false;
     }
     return $args;
@@ -29,7 +45,7 @@ add_action('init', function () {
 }, 99);
 
 add_action('template_redirect', function () {
-    if (is_admin()) {
+    if (is_admin() || !kbs_has_accommodation_page()) {
         return;
     }
     $path = trim((string) parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH), '/');
