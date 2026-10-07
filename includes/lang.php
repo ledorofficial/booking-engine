@@ -273,7 +273,7 @@ function kbs_render_language_switcher($atts = []): string
     ob_start();
     ?>
     <details class="kbs-lang kbs-lang--<?php echo esc_attr($theme); ?> kbs-lang--<?php echo esc_attr($align); ?>" data-kbs-lang-menu>
-        <summary aria-label="<?php echo esc_attr__('Language', 'karuna-booking-search'); ?>" title="<?php echo esc_attr($current['name']); ?>">
+        <summary aria-label="<?php echo esc_attr__('Language', 'booking-engine'); ?>" title="<?php echo esc_attr($current['name']); ?>">
             <img src="<?php echo esc_url($current['flag']); ?>" alt="" width="24" height="24">
             <?php if (strtolower((string) $atts['code']) === 'on') : ?>
                 <span class="kbs-lang-code"><?php echo esc_html(strtoupper(explode('-', $current['code'])[0])); ?></span>

@@ -1,4 +1,4 @@
-# Karuna Booking Search
+# Booking Engine
 
 A WordPress plugin for **karunasiargao.com** — a branded availability search that
 replaces the Smoobu embed. A compact one-month calendar (live nightly prices,
@@ -11,7 +11,7 @@ https://bookings.karunasiargao.com/?arrival=YYYY-MM-DD&departure=YYYY-MM-DD&gues
 ## Install
 
 1. Download the latest zip from **[Releases](../../releases)** (or *Code → Download
-   ZIP* and rename the folder to `karuna-booking-search`).
+   ZIP* and rename the folder to `booking-engine`).
 2. WP Admin → **Plugins → Add New → Upload Plugin** → the zip → **Install** →
    **Activate**.
 3. Place it:
@@ -19,7 +19,7 @@ https://bookings.karunasiargao.com/?arrival=YYYY-MM-DD&departure=YYYY-MM-DD&gues
      *Shortcode* element (never a Text / Heading / HTML widget)
    - **Per-room calendar shortcode:** `[karuna_room_calendar room_id="123"]` —
      same rule, use a *Shortcode* element
-   - **Widget:** *Appearance → Widgets → Karuna Booking Search*
+   - **Widget:** *Appearance → Widgets → Booking Engine*
 
 ## Updates
 
@@ -29,7 +29,7 @@ available** notice in *Plugins* and updates with one click — no re-upload.
 (WordPress checks automatically every ~12h; force it from *Dashboard → Updates →
 Check again*.)
 
-Shipping an update = bump the `Version:` header in `karuna-booking-search.php`
+Shipping an update = bump the `Version:` header in `booking-engine.php`
 and push to `main`. A GitHub Actions workflow
 (`.github/workflows/release.yml`) then tags and publishes the matching
 `vX.Y.Z` release with a zip automatically — no manual release step needed.
@@ -167,7 +167,7 @@ a **Custom HTML** block — but it does not self-update.
 
 | Path | Purpose |
 |---|---|
-| `karuna-booking-search.php` | Plugin bootstrap, shortcodes, widget, update checker. |
+| `booking-engine.php` | Plugin bootstrap, shortcodes, widget, update checker. |
 | `assets/kbs.css`, `assets/kbs.js` | Search widget styles + logic (`__KBS_API__` swapped for the endpoint URL at runtime). |
 | `assets/kbs-room.css`, `assets/kbs-room.js` | Room calendar shortcode styles + logic (`__KBS_API__` swapped the same way). |
 | `elementor-html-widget.html` | Standalone paste-in copy of the search widget only — keep in sync with `assets/kbs.*`. No standalone copy of the room calendar; shortcode-only. |

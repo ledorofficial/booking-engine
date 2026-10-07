@@ -1,7 +1,7 @@
 name: Release on version bump
 
 # The plugin self-updates via a GitHub Release (see plugin-update-checker in
-# karuna-booking-search.php). Pushing a bumped "Version:" header to main is
+# booking-engine.php). Pushing a bumped "Version:" header to main is
 # not enough on its own — WordPress won't see an update until a matching
 # Release + zip exists. This workflow creates that Release automatically.
 
@@ -9,7 +9,7 @@ on:
   push:
     branches: [main]
     paths:
-      - karuna-booking-search.php
+      - booking-engine.php
   workflow_dispatch: {}
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
       - name: Read plugin version
         id: version
         run: |
-          VERSION=$(grep -m1 '^ \* Version:' karuna-booking-search.php | sed -E 's/.*Version:[[:space:]]*//')
+          VERSION=$(grep -m1 '^ \* Version:' booking-engine.php | sed -E 's/.*Version:[[:space:]]*//')
           if [ -z "$VERSION" ]; then
             echo "Could not read Version header" >&2
             exit 1
@@ -45,9 +45,9 @@ jobs:
       - name: Build plugin zip
         if: steps.check.outputs.exists == 'false'
         run: |
-          mkdir -p /tmp/build/karuna-booking-search
-          git archive HEAD | tar -x -C /tmp/build/karuna-booking-search
-          (cd /tmp/build && zip -rq "$GITHUB_WORKSPACE/karuna-booking-search.zip" karuna-booking-search)
+          mkdir -p /tmp/build/booking-engine
+          git archive HEAD | tar -x -C /tmp/build/booking-engine
+          (cd /tmp/build && zip -rq "$GITHUB_WORKSPACE/booking-engine.zip" booking-engine)
 
       - name: Publish GitHub Release
         if: steps.check.outputs.exists == 'false'
@@ -55,6 +55,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "v${{ steps.version.outputs.version }}" \
-            karuna-booking-search.zip \
+            booking-engine.zip \
             --title "v${{ steps.version.outputs.version }}" \
             --generate-notes

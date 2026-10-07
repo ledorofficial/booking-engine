@@ -1,24 +1,24 @@
 <?php
 /**
- * Plugin Name:       Karuna Booking Search
- * Plugin URI:        https://github.com/ledorofficial/karuna-booking-search
- * Description:        Branded availability search and per-room calendar (replaces the Smoobu widgets). A compact one-month search calendar with live nightly prices, plus a read-only per-room calendar, both pulled from bookings.karunasiargao.com. Use [karuna_booking_search], [karuna_room_calendar], or the "Karuna Booking Search" widget.
- * Version:           1.14.2
+ * Plugin Name:       Booking Engine
+ * Plugin URI:        https://github.com/ledorofficial/booking-engine
+ * Description:        Branded availability search and per-room calendar (replaces the Smoobu widgets). A compact one-month search calendar with live nightly prices, plus a read-only per-room calendar, both pulled from bookings.karunasiargao.com. Use [karuna_booking_search], [karuna_room_calendar], or the "Booking Engine" widget.
+ * Version:           1.15.0
  * Author:            Karuna Siargao
  * License:           GPL-2.0-or-later
- * Text Domain:       karuna-booking-search
- * Update URI:        https://github.com/ledorofficial/karuna-booking-search
+ * Text Domain:       booking-engine
+ * Update URI:        https://github.com/ledorofficial/booking-engine
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-const KBS_VERSION      = '1.14.2';
+const KBS_VERSION      = '1.15.0';
 const KBS_FLATPICKR    = '4.6.13';
 const KBS_DEFAULT_BASE = 'https://bookings.karunasiargao.com/';
 const KBS_CALENDAR_API = 'https://bookings.karunasiargao.com/api/calendar';
-const KBS_REPO         = 'https://github.com/ledorofficial/karuna-booking-search/';
+const KBS_REPO         = 'https://github.com/ledorofficial/booking-engine/';
 const KBS_FILE         = __FILE__;
 
 require_once __DIR__ . '/includes/lang.php';
@@ -37,7 +37,7 @@ if (is_readable(__DIR__ . '/plugin-update-checker/plugin-update-checker.php')) {
     $kbsUpdateChecker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
         KBS_REPO,
         __FILE__,
-        'karuna-booking-search'
+        'booking-engine'
     );
     $kbsUpdateChecker->setBranch('main');
 }
@@ -231,7 +231,7 @@ class KBS_Widget extends WP_Widget
 {
     public function __construct()
     {
-        parent::__construct('kbs_widget', 'Karuna Booking Search', [
+        parent::__construct('kbs_widget', 'Booking Engine', [
             'description' => 'Branded availability search that submits to bookings.karunasiargao.com',
         ]);
     }
