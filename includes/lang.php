@@ -22,6 +22,7 @@ function kbs_languages(): array
         'ja'    => ['日本語',   'jp'],
         'ko'    => ['한국어',   'kr'],
         'ru'    => ['Русский',  'ru'],
+        'es'    => ['Español',  'mx'],
     ];
 }
 
@@ -39,7 +40,7 @@ function kbs_normalize_lang(?string $value): ?string
         return 'zh-TW';
     }
     $primary = explode('-', $v)[0];
-    return in_array($primary, ['en', 'ja', 'ko', 'ru'], true) ? $primary : null;
+    return in_array($primary, ['en', 'ja', 'ko', 'ru', 'es'], true) ? $primary : null;
 }
 
 /** The engine language for the page being rendered ("en" when unknown / single-language site). */
@@ -121,6 +122,15 @@ function kbs_strings(string $lang): array
             'earlier' => 'Предыдущие месяцы', 'later' => 'Следующие месяцы',
             'button' => ['Search' => 'Поиск', 'Check availability' => 'Проверить наличие'],
         ],
+        'es' => [
+            'arrival' => 'Llegada', 'departure' => 'Salida', 'guests' => 'Huéspedes',
+            'add_date' => 'Agregar fecha', 'adults' => 'Adultos', 'children' => 'Niños',
+            'fewer' => 'Menos', 'more' => 'Más',
+            'guest_forms' => ['%d huésped', '%d huéspedes', '%d huéspedes'],
+            'note_room' => 'Precios por noche en %s · esta habitación', 'note_lowest' => 'Precios por noche en %s · habitación más económica disponible',
+            'earlier' => 'Meses anteriores', 'later' => 'Meses siguientes',
+            'button' => ['Search' => 'Buscar', 'Check availability' => 'Ver disponibilidad'],
+        ],
     ];
 
     return array_replace($t['en'], $t[$lang] ?? []);
@@ -173,7 +183,7 @@ function kbs_booking_hosts(): array
 /** The flatpickr locale file for a language, or null for English. */
 function kbs_flatpickr_locale(string $lang): ?string
 {
-    return ['zh-CN' => 'zh', 'zh-TW' => 'zh_tw', 'ja' => 'ja', 'ko' => 'ko', 'ru' => 'ru'][$lang] ?? null;
+    return ['zh-CN' => 'zh', 'zh-TW' => 'zh_tw', 'ja' => 'ja', 'ko' => 'ko', 'ru' => 'ru', 'es' => 'es'][$lang] ?? null;
 }
 
 /**

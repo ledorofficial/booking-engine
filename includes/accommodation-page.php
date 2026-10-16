@@ -49,7 +49,7 @@ add_action('template_redirect', function () {
         return;
     }
     $path = trim((string) parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH), '/');
-    if (!preg_match('~^(?:(zh|tw|ja|ko|ru)/)?our-unique-stays(?:-(zh|tw|ja|ko|ru))?$~', $path, $m)) {
+    if (!preg_match('~^(?:(zh|tw|ja|ko|ru|es)/)?our-unique-stays(?:-(zh|tw|ja|ko|ru|es))?$~', $path, $m)) {
         return;
     }
     $lang  = ($m[1] ?? '') !== '' ? $m[1] : ($m[2] ?? '');

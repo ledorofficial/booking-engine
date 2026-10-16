@@ -3,7 +3,7 @@
  * Plugin Name:       Booking Engine
  * Plugin URI:        https://github.com/ledorofficial/booking-engine
  * Description:        Branded availability search and per-room calendar (replaces the Smoobu widgets). A compact one-month search calendar with live nightly prices, plus a read-only per-room calendar, both pulled from bookings.karunasiargao.com. Use [karuna_booking_search], [karuna_room_calendar], or the "Booking Engine" widget.
- * Version:           1.15.1
+ * Version:           1.16.0
  * Author:            ledorofficial.com
  * Author URI:        https://ledorofficial.com
  * License:           GPL-2.0-or-later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const KBS_VERSION      = '1.15.1';
+const KBS_VERSION      = '1.16.0';
 const KBS_FLATPICKR    = '4.6.13';
 const KBS_DEFAULT_BASE = 'https://bookings.karunasiargao.com/';
 const KBS_CALENDAR_API = 'https://bookings.karunasiargao.com/api/calendar';
